@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Practice foreign language vocabulary with a Monkeytype-style typing trainer. Learn, test, and master words in multiple languages.">
+  <title>VocabType — Language Typing Trainer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- Header -->
+    <header class="header">
+      <h1 class="logo">
+        <span class="logo-icon">⌨</span>
+        <span>Vocab<span class="logo-accent">Type</span></span>
+      </h1>
+    </header>
+
+    <!-- Settings Bar (Merged Modes and Settings) -->
+    <div class="settings-bar" id="settingsBar">
+      <!-- Mode Tabs -->
+      <nav class="mode-tabs" id="modeTabs">
+        <button class="mode-tab active" data-mode="learning" id="tab-learning">
+          <span class="tab-icon">📖</span> learning
+        </button>
+        <button class="mode-tab" data-mode="test" id="tab-test">
+          <span class="tab-icon">✍️</span> test
+        </button>
+        <button class="mode-tab" data-mode="reverse" id="tab-reverse">
+          <span class="tab-icon">🔄</span> reverse
+        </button>
+        <button class="mode-tab" data-mode="spaced" id="tab-spaced">
+          <span class="tab-icon">🧠</span> spaced
+        </button>
+      </nav>
+
+      <div class="setting-group">
+        <label class="setting-label">language</label>
+        <select class="setting-select" id="langSelect">
+          <!-- populated dynamically -->
+        </select>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">theme</label>
+        <select class="setting-select" id="themeSelect">
+          <!-- populated dynamically -->
+        </select>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">shuffle</label>
+        <button class="setting-btn toggle" id="shuffleToggle">off</button>
+      </div>
+      <div class="setting-group">
+        <label class="setting-label">auto tts (learning)</label>
+        <button class="setting-btn toggle" id="ttsToggle">off</button>
+      </div>
+      <div class="setting-group" style="margin-left: auto;">
+        <button class="setting-btn" id="btnHistory">
+          <span class="tab-icon">🕒</span> history
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Typing Area -->
+    <main class="typing-area" id="typingArea">
+      <!-- Test mode: click to start overlay -->
+      <div class="test-start-overlay" id="testStartOverlay">
+        <div class="test-start-icon">✍️</div>
+        <div class="test-start-title">Test Mode</div>
+        <div class="test-start-text">click anywhere or press any key to start</div>
+      </div>
+
+      <div class="word-hint" id="wordHint"></div>
+      <div class="word-display-container">
+        <div class="word-display" id="wordDisplay">
+          <!-- letters rendered here -->
+        </div>
+        <button class="audio-btn hide" id="audioBtn" title="Play pronunciation">🔊</button>
+      </div>
+      <div id="caret" class="caret hidden"></div>
+
+      <!-- Test mode timer bar -->
+      <div class="timer-bar" id="timerBar">
+        <div class="timer-fill" id="timerFill"></div>
+        <span class="timer-text" id="timerText">10.0s</span>
+      </div>
+
+      <!-- Test mode hint -->
+      <div class="word-hint-text" id="wordHintText"></div>
+
+      <input
+        type="text"
+        class="typing-input"
+        id="typingInput"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        placeholder="start typing..."
+      >
+      <div class="skip-hint">press <kbd>Enter</kbd> to skip · <kbd>Tab</kbd> to restart</div>
+    </main>
+
+    <!-- Stats Bar (Moved below typing area) -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat" id="statProgress">
+        <span class="stat-value">0/0</span>
+        <span class="stat-label">progress</span>
+      </div>
+      <div class="stat" id="statAccuracy">
+        <span class="stat-value">100%</span>
+        <span class="stat-label">accuracy</span>
+      </div>
+      <div class="stat" id="statWpm">
+        <span class="stat-value">0</span>
+        <span class="stat-label">wpm</span>
+      </div>
+      <div class="stat" id="statStreak">
+        <span class="stat-value">0 🔥</span>
+        <span class="stat-label">streak</span>
+      </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="results-overlay" id="resultsOverlay">
+      <div class="results-modal" id="resultsModal">
+        <h2 class="results-title">Results</h2>
+        <div class="results-grid">
+          <div class="result-card">
+            <span class="result-value" id="resWords">0</span>
+            <span class="result-label">words</span>
+          </div>
+          <div class="result-card">
+            <span class="result-value" id="resAccuracy">0%</span>
+            <span class="result-label">accuracy</span>
+          </div>
+          <div class="result-card">
+            <span class="result-value" id="resWpm">0</span>
+            <span class="result-label">wpm</span>
+          </div>
+          <div class="result-card">
+            <span class="result-value" id="resStreak">0</span>
+            <span class="result-label">best streak</span>
+          </div>
+          <div class="result-card">
+            <span class="result-value" id="resMistakes">0</span>
+            <span class="result-label">mistakes</span>
+          </div>
+        </div>
+        <div class="results-mistakes-list" id="resultsMistakesList">
+          <!-- mistake words listed here -->
+        </div>
+        <button class="btn-restart" id="btnRestart">try again</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- History Modal -->
+  <div class="results-overlay" id="historyOverlay">
+    <div class="results-modal history-modal">
+      <h2 class="results-title">Session History</h2>
+      <div class="history-list" id="historyList">
+        <!-- populated dynamically -->
+      </div>
+      <button class="btn-restart" id="btnCloseHistory">close</button>
+    </div>
+  </div>
+
+  <script src="app.js?v=11"></script>
+</body>
+</html>
