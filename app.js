@@ -466,16 +466,8 @@ const INLINE_WORD_DATA = {
 let wordSets = [];
 
 async function loadWords() {
-  // Try fetch first (works on HTTP server), fallback to inline data (works on file://)
-  try {
-    const res = await fetch('words.json');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    wordSets = data.sets;
-  } catch (e) {
-    console.log('Using inline word data (file:// mode)');
-    wordSets = INLINE_WORD_DATA.sets;
-  }
+  // Using inline word data globally to avoid desync with words.json
+  wordSets = INLINE_WORD_DATA.sets;
   populateLanguageSelect();
 
   if (!state.currentLangId) {
